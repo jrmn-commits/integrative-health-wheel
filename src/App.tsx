@@ -92,10 +92,27 @@ export default function IntegrativeHealthWheelApp() {
     setSnapshots((prev) => prev.map((s) => (s.month === current.month ? { ...s, [field]: val } : s)));
   }
 
-  const VBI = useMemo(() => mean([current?.scores.physical ?? 0, current?.scores.nutrition ?? 0, current?.scores.sleep ?? 0])), [current]);
-  const ISI = useMemo(() => mean([current?.scores.stress ?? 0, current?.scores.emotional ?? 0, current?.scores.purpose ?? 0])), [current]);
-  const SSI = useMemo(() => mean([current?.scores.social ?? 0, current?.scores.environment ?? 0, current?.scores.medical ?? 0, current?.scores.financial ?? 0])), [current]);
-  const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current]);
+// Indices (fix: closing parens belong after the deps array)
+const VBI = useMemo(
+  () => mean([current?.scores.physical ?? 0, current?.scores.nutrition ?? 0, current?.scores.sleep ?? 0]),
+  [current]
+);
+const ISI = useMemo(
+  () => mean([current?.scores.stress ?? 0, current?.scores.emotional ?? 0, current?.scores.purpose ?? 0]),
+  [current]
+);
+const SSI = useMemo(
+  () =>
+    mean([
+      current?.scores.social ?? 0,
+      current?.scores.environment ?? 0,
+      current?.scores.medical ?? 0,
+      current?.scores.financial ?? 0,
+    ]),
+  [current]
+);
+const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current]);
+
 
   const radarData = useMemo(() => DOMAINS.map((d) => ({ domain: d.label, score: current?.scores[d.key] ?? 0 })), [current]);
 
