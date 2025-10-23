@@ -49,3 +49,4 @@ Everything is stored in `localStorage` in the user’s browser. No backend requi
 ## Notes
 - If you want server-side auth later, you can still host statically behind Cloudflare Access.
 - For a containerized Homelab deploy, use the provided Dockerfile & nginx.conf and bind to 80/443 with your reverse proxy.
+# integrative-health-wheel
