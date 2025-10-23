@@ -73,7 +73,7 @@ export default function IntegrativeHealthWheelApp() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshots));
   }, [snapshots]);
 
-  const current = snapshots.find((s) => s.month === activeMonth) as Snapshot | undefined;
+  const current = snapshots.find((s) => s.month === activeMonth);
   const last = useMemo(() => {
     const sorted = [...snapshots].sort((a, b) => a.month.localeCompare(b.month));
     const idx = sorted.findIndex((s) => s.month === activeMonth);
@@ -231,7 +231,7 @@ export default function IntegrativeHealthWheelApp() {
                       Today
                     </Button>
                     <Button variant="secondary" onClick={() => addMonth(+1)} title="Next">
-                      →
+                      Next
                     </Button>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function IntegrativeHealthWheelApp() {
                   <Input
                     value={current?.context ?? ""}
                     onChange={(e) => updateField("context", e.target.value)}
-                    placeholder="Exams, travel, illness, job change…"
+                    placeholder="Exams, travel, illness, job change..."
                   />
                 </div>
               </div>
@@ -291,11 +291,11 @@ export default function IntegrativeHealthWheelApp() {
                           >
                             {typeof delta === "number"
                               ? delta > 0
-                                ? `▲ +${delta.toFixed(1)}`
+                                ? `+${delta.toFixed(1)}`
                                 : delta < 0
-                                ? `▼ ${delta.toFixed(1)}`
-                                : "— 0.0"
-                              : "—"}
+                                ? `${delta.toFixed(1)}`
+                                : "0.0"
+                              : "-"}
                           </div>
                         </div>
                       </div>
@@ -336,21 +336,8 @@ export default function IntegrativeHealthWheelApp() {
                     <PolarGrid />
                     <PolarAngleAxis dataKey="domain" tick={{ fill: "#d4d4d8", fontSize: 12 }} />
                     <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fill: "#a1a1aa", fontSize: 10 }} />
-                    <Tooltip
-                      formatter={(v: any) => `${v}/10`}
-                      contentStyle={{
-                        background: "#0a0a0a",
-                        border: "1px solid #27272a",
-                        color: "#e4e4e7",
-                      }}
-                    />
-                    <Radar
-                      name="Score"
-                      dataKey="score"
-                      stroke="#60a5fa"
-                      fill="#60a5fa"
-                      fillOpacity={0.4}
-                    />
+                    <Tooltip formatter={(v: any) => `${v}/10`} />
+                    <Radar name="Score" dataKey="score" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.4} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -370,14 +357,14 @@ export default function IntegrativeHealthWheelApp() {
             <textarea
               value={current?.notes ?? ""}
               onChange={(e) => updateField("notes", e.target.value)}
-              placeholder="Wins, bottlenecks, micro-skills for next month…"
+              placeholder="Wins, bottlenecks, micro-skills for next month..."
               className="w-full min-h-[120px] rounded-xl bg-neutral-950 border border-neutral-800 p-3 focus:outline-none focus:ring-1 focus:ring-neutral-700"
             />
           </CardContent>
         </Card>
 
         <footer className="text-center text-xs text-neutral-500 py-4 print:hidden">
-          Built with ❤️ • Data stays in your browser (LocalStorage) • Export/Import anytime
+          Built with love • Data stays in your browser (LocalStorage) • Export/Import anytime
         </footer>
       </div>
     </div>
