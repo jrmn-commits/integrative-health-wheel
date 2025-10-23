@@ -1,0 +1,11 @@
+{
+  "name": "integrative-health-wheel",      // must match your Pages project name
+  "compatibility_date": "2025-10-23",
+  // Either of these works; choose ONE:
+
+  // A) New-style key:
+  "pages_build_output_dir": "dist"
+
+  // B) Or old-style assets block:
+  // "assets": { "directory": "./dist" }
+}
