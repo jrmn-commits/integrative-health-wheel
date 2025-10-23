@@ -1,10 +1,9 @@
-
 import React, { useEffect, useMemo, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+import { Card, CardContent } from "./components/ui/card";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import { Label } from "./components/ui/label";
+import { Slider } from "./components/ui/slider";
 import { Save, Upload, Download, RefreshCw, Calendar, FileText, BarChart as BarIcon } from "lucide-react";
 import {
   Radar,
@@ -25,8 +24,8 @@ const DOMAINS = [
   { key: "social", label: "Social/Relationships", def: "Support, connectedness, boundaries" },
   { key: "purpose", label: "Purpose/Meaning", def: "Values alignment, direction, motivation" },
   { key: "environment", label: "Environment", def: "Home/work setup, clutter, light, nature" },
-  { key: "medical", label: "Medical Self‑Care", def: "Preventive care, meds/supps adherence" },
-  { key: "financial", label: "Financial Well‑being", def: "Budgeting, savings, aligned spending" },
+  { key: "medical", label: "Medical Self-Care", def: "Preventive care, meds/supps adherence" },
+  { key: "financial", label: "Financial Well-being", def: "Budgeting, savings, aligned spending" },
 ] as const;
 
 type Scores = Record<(typeof DOMAINS)[number]["key"], number>;
@@ -92,27 +91,26 @@ export default function IntegrativeHealthWheelApp() {
     setSnapshots((prev) => prev.map((s) => (s.month === current.month ? { ...s, [field]: val } : s)));
   }
 
-// Indices (fix: closing parens belong after the deps array)
-const VBI = useMemo(
-  () => mean([current?.scores.physical ?? 0, current?.scores.nutrition ?? 0, current?.scores.sleep ?? 0]),
-  [current]
-);
-const ISI = useMemo(
-  () => mean([current?.scores.stress ?? 0, current?.scores.emotional ?? 0, current?.scores.purpose ?? 0]),
-  [current]
-);
-const SSI = useMemo(
-  () =>
-    mean([
-      current?.scores.social ?? 0,
-      current?.scores.environment ?? 0,
-      current?.scores.medical ?? 0,
-      current?.scores.financial ?? 0,
-    ]),
-  [current]
-);
-const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current]);
-
+  // Indices
+  const VBI = useMemo(
+    () => mean([current?.scores.physical ?? 0, current?.scores.nutrition ?? 0, current?.scores.sleep ?? 0]),
+    [current]
+  );
+  const ISI = useMemo(
+    () => mean([current?.scores.stress ?? 0, current?.scores.emotional ?? 0, current?.scores.purpose ?? 0]),
+    [current]
+  );
+  const SSI = useMemo(
+    () =>
+      mean([
+        current?.scores.social ?? 0,
+        current?.scores.environment ?? 0,
+        current?.scores.medical ?? 0,
+        current?.scores.financial ?? 0,
+      ]),
+    [current]
+  );
+  const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current]);
 
   const radarData = useMemo(() => DOMAINS.map((d) => ({ domain: d.label, score: current?.scores[d.key] ?? 0 })), [current]);
 
@@ -144,7 +142,7 @@ const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current])
         ];
         return fields.join(",");
       });
-    const csv = [header, ...rows].join("\\n");
+    const csv = [header, ...rows].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -188,7 +186,7 @@ const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current])
         <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Integrative Health Wheel</h1>
-            <p className="text-sm text-neutral-400">Monthly self‑assessment • Scores, deltas, radar wheel, and exports.</p>
+            <p className="text-sm text-neutral-400">Monthly self-assessment • Scores, deltas, radar wheel, and exports.</p>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="secondary" onClick={() => window.print()} title="Print report"><FileText className="mr-2 h-4 w-4"/>Print</Button>
@@ -273,7 +271,7 @@ const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current])
                     <PolarGrid />
                     <PolarAngleAxis dataKey="domain" tick={{ fill: "#d4d4d8", fontSize: 12 }} />
                     <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fill: "#a1a1aa", fontSize: 10 }} />
-                    <Tooltip formatter={(v: any) => `${v}/10`} contentStyle={{ background: "#0a0a0a", border: "1px solid #27272a", color: "#e4e4e7" }} />
+                    <Tooltip formatter={(v: any) => `${v}/10`} contentStyle={{ background: "#0a0a0a", border: "1px solid "#27272a", color: "#e4e4e7" }} />
                     <Radar name="Score" dataKey="score" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.4} />
                   </RadarChart>
                 </ResponsiveContainer>
@@ -294,7 +292,7 @@ const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current])
             <textarea
               value={current?.notes ?? ""}
               onChange={(e) => updateField("notes", e.target.value)}
-              placeholder="Wins, bottlenecks, micro‑skills for next month…"
+              placeholder="Wins, bottlenecks, micro-skills for next month…"
               className="w-full min-h-[120px] rounded-xl bg-neutral-950 border border-neutral-800 p-3 focus:outline-none focus:ring-1 focus:ring-neutral-700"
             />
           </CardContent>
