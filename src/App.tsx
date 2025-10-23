@@ -37,7 +37,7 @@ type Snapshot = {
   notes?: string;
 };
 
-const EMPTY_SCORES: Scores = Object.fromEntries(DOMAINS.map(d => [d.key, 0])) as Scores;
+const EMPTY_SCORES: Scores = Object.fromEntries(DOMAINS.map((d) => [d.key, 0])) as Scores;
 const STORAGE_KEY = "ihw_snapshots_v1";
 
 function mean(nums: number[]) {
@@ -86,12 +86,12 @@ export default function IntegrativeHealthWheelApp() {
       prev.map((s) => (s.month === current.month ? { ...s, scores: { ...s.scores, [key]: val } } : s))
     );
   }
+
   function updateField(field: keyof Snapshot, val: string) {
     if (!current) return;
     setSnapshots((prev) => prev.map((s) => (s.month === current.month ? { ...s, [field]: val } : s)));
   }
 
-  // Indices
   const VBI = useMemo(
     () => mean([current?.scores.physical ?? 0, current?.scores.nutrition ?? 0, current?.scores.sleep ?? 0]),
     [current]
@@ -112,7 +112,10 @@ export default function IntegrativeHealthWheelApp() {
   );
   const THS = useMemo(() => mean(Object.values(current?.scores ?? {})), [current]);
 
-  const radarData = useMemo(() => DOMAINS.map((d) => ({ domain: d.label, score: current?.scores[d.key] ?? 0 })), [current]);
+  const radarData = useMemo(
+    () => DOMAINS.map((d) => ({ domain: d.label, score: current?.scores[d.key] ?? 0 })),
+    [current]
+  );
 
   function deltaFor(key: keyof Scores) {
     if (!last) return undefined;
@@ -171,9 +174,10 @@ export default function IntegrativeHealthWheelApp() {
 
   function addMonth(offset = 1) {
     const [y, m] = activeMonth.split("-").map(Number);
-    const d = new Date(y, (m - 1) + offset, 1);
+    const d = new Date(y, m - 1 + offset, 1);
     setActiveMonth(monthKey(d));
   }
+
   function resetCurrent() {
     if (!current) return;
     if (!confirm("Reset this month's scores to 0?")) return;
@@ -186,15 +190,27 @@ export default function IntegrativeHealthWheelApp() {
         <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Integrative Health Wheel</h1>
-            <p className="text-sm text-neutral-400">Monthly self-assessment • Scores, deltas, radar wheel, and exports.</p>
+            <p className="text-sm text-neutral-400">
+              Monthly self-assessment • Scores, deltas, radar wheel, and exports.
+            </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="secondary" onClick={() => window.print()} title="Print report"><FileText className="mr-2 h-4 w-4"/>Print</Button>
-            <Button variant="secondary" onClick={exportCSV} title="Export CSV"><Download className="mr-2 h-4 w-4"/>CSV</Button>
+            <Button variant="secondary" onClick={() => window.print()} title="Print report">
+              <FileText className="mr-2 h-4 w-4" />
+              Print
+            </Button>
+            <Button variant="secondary" onClick={exportCSV} title="Export CSV">
+              <Download className="mr-2 h-4 w-4" />
+              CSV
+            </Button>
             <div>
               <input id="jsonFile" type="file" accept="application/json" className="hidden" onChange={handleJSONImport} />
-              <Label htmlFor="jsonFile" className="cursor-pointer inline-flex items-center px-3 py-2 rounded-md border border-neutral-700 hover:bg-neutral-800 text-sm">
-                <Upload className="mr-2 h-4 w-4"/>Import JSON
+              <Label
+                htmlFor="jsonFile"
+                className="cursor-pointer inline-flex items-center px-3 py-2 rounded-md border border-neutral-700 hover:bg-neutral-800 text-sm"
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                Import JSON
               </Label>
             </div>
           </div>
@@ -207,20 +223,36 @@ export default function IntegrativeHealthWheelApp() {
                 <div className="col-span-2 sm:col-span-1">
                   <Label className="text-neutral-300">Month</Label>
                   <div className="flex gap-2 items-center mt-1">
-                    <Button variant="secondary" onClick={() => addMonth(-1)} title="Previous"><Calendar className="h-4 w-4"/></Button>
+                    <Button variant="secondary" onClick={() => addMonth(-1)} title="Previous">
+                      <Calendar className="h-4 w-4" />
+                    </Button>
                     <Input value={activeMonth} onChange={(e) => setActiveMonth(e.target.value)} placeholder="YYYY-MM" />
-                    <Button variant="secondary" onClick={() => setActiveMonth(monthKey())} title="Jump to current">Today</Button>
-                    <Button variant="secondary" onClick={() => addMonth(+1)} title="Next">→</Button>
+                    <Button variant="secondary" onClick={() => setActiveMonth(monthKey())} title="Jump to current">
+                      Today
+                    </Button>
+                    <Button variant="secondary" onClick={() => addMonth(+1)} title="Next">
+                      →
+                    </Button>
                   </div>
                 </div>
                 <div className="col-span-2 sm:col-span-2">
                   <Label className="text-neutral-300">Context (workload/life events)</Label>
-                  <Input value={current?.context ?? ""} onChange={(e) => updateField("context", e.target.value)} placeholder="Exams, travel, illness, job change…" />
+                  <Input
+                    value={current?.context ?? ""}
+                    onChange={(e) => updateField("context", e.target.value)}
+                    placeholder="Exams, travel, illness, job change…"
+                  />
                 </div>
               </div>
               <div className="flex gap-2 sm:ml-auto">
-                <Button variant="outline" onClick={resetCurrent}><RefreshCw className="mr-2 h-4 w-4"/>Reset Scores</Button>
-                <Button variant="destructive" onClick={() => setSnapshots([])}><Save className="mr-2 h-4 w-4"/>Clear All</Button>
+                <Button variant="outline" onClick={resetCurrent}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Reset Scores
+                </Button>
+                <Button variant="destructive" onClick={() => setSnapshots([])}>
+                  <Save className="mr-2 h-4 w-4" />
+                  Clear All
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -230,7 +262,7 @@ export default function IntegrativeHealthWheelApp() {
           <Card>
             <CardContent>
               <div className="flex items-center gap-2 mb-1">
-                <BarIcon className="h-5 w-5"/>
+                <BarIcon className="h-5 w-5" />
                 <h2 className="text-lg font-semibold">Scores (0–10)</h2>
               </div>
               <div className="space-y-4">
@@ -246,14 +278,47 @@ export default function IntegrativeHealthWheelApp() {
                         </div>
                         <div className="text-right">
                           <div className="text-2xl tabular-nums leading-none">{val}</div>
-                          <div className={`text-xs ${typeof delta === "number" ? (delta > 0 ? "text-emerald-400" : delta < 0 ? "text-red-400" : "text-neutral-400") : "text-neutral-500"}`}>
-                            {typeof delta === "number" ? (delta > 0 ? `▲ +${delta.toFixed(1)}` : delta < 0 ? `▼ ${delta.toFixed(1)}` : "— 0.0") : "—"}
+                          <div
+                            className={`text-xs ${
+                              typeof delta === "number"
+                                ? delta > 0
+                                  ? "text-emerald-400"
+                                  : delta < 0
+                                  ? "text-red-400"
+                                  : "text-neutral-400"
+                                : "text-neutral-500"
+                            }`}
+                          >
+                            {typeof delta === "number"
+                              ? delta > 0
+                                ? `▲ +${delta.toFixed(1)}`
+                                : delta < 0
+                                ? `▼ ${delta.toFixed(1)}`
+                                : "— 0.0"
+                              : "—"}
                           </div>
                         </div>
                       </div>
                       <div className="mt-3 flex items-center gap-3">
-                        <Slider value={[val]} min={0} max={10} step={1} onValueChange={([v]) => updateScore(d.key, v)} className="flex-1" />
-                        <Input type="number" min={0} max={10} step={1} value={val} onChange={(e) => updateScore(d.key, Math.max(0, Math.min(10, Number(e.target.value))))} className="w-20" />
+                        <Slider
+                          value={[val]}
+                          min={0}
+                          max={10}
+                          step={1}
+                          onValueChange={([v]) => updateScore(d.key, v)}
+                          className="flex-1"
+                        />
+                        <Input
+                          type="number"
+                          min={0}
+                          max={10}
+                          step={1}
+                          value={val}
+                          onChange={(e) =>
+                            updateScore(d.key, Math.max(0, Math.min(10, Number(e.target.value))))
+                          }
+                          className="w-20"
+                        />
                       </div>
                     </div>
                   );
@@ -271,8 +336,21 @@ export default function IntegrativeHealthWheelApp() {
                     <PolarGrid />
                     <PolarAngleAxis dataKey="domain" tick={{ fill: "#d4d4d8", fontSize: 12 }} />
                     <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fill: "#a1a1aa", fontSize: 10 }} />
-                    <Tooltip formatter={(v: any) => `${v}/10`} contentStyle={{ background: "#0a0a0a", border: "1px solid #27272a", color: "#e4e4e7" }} />
-                    <Radar name="Score" dataKey="score" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.4} />
+                    <Tooltip
+                      formatter={(v: any) => `${v}/10`}
+                      contentStyle={{
+                        background: "#0a0a0a",
+                        border: "1px solid #27272a",
+                        color: "#e4e4e7",
+                      }}
+                    />
+                    <Radar
+                      name="Score"
+                      dataKey="score"
+                      stroke="#60a5fa"
+                      fill="#60a5fa"
+                      fillOpacity={0.4}
+                    />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
