@@ -271,7 +271,7 @@ export default function IntegrativeHealthWheelApp() {
                     <PolarGrid />
                     <PolarAngleAxis dataKey="domain" tick={{ fill: "#d4d4d8", fontSize: 12 }} />
                     <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fill: "#a1a1aa", fontSize: 10 }} />
-                    <Tooltip formatter={(v: any) => `${v}/10`} contentStyle={{ background: "#0a0a0a", border: "1px solid "#27272a", color: "#e4e4e7" }} />
+                    <Tooltip formatter={(v: any) => `${v}/10`} contentStyle={{ background: "#0a0a0a", border: "1px solid #27272a", color: "#e4e4e7" }} />
                     <Radar name="Score" dataKey="score" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.4} />
                   </RadarChart>
                 </ResponsiveContainer>
