@@ -155,6 +155,18 @@ export default function IntegrativeHealthWheelApp() {
     URL.revokeObjectURL(url);
   }
 
+  function exportJSON() {
+    const data = JSON.stringify(snapshots, null, 2);
+    const blob = new Blob([data], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "integrative_health_monthly.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+
   function handleJSONImport(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -204,6 +216,10 @@ export default function IntegrativeHealthWheelApp() {
               CSV
             </Button>
             <div>
+            <Button variant="secondary" onClick={exportJSON} title="Export JSON">
+              <Download className="mr-2 h-4 w-4" />
+              JSON
+            </Button>
               <input id="jsonFile" type="file" accept="application/json" className="hidden" onChange={handleJSONImport} />
               <Label
                 htmlFor="jsonFile"
@@ -218,11 +234,11 @@ export default function IntegrativeHealthWheelApp() {
 
         <Card>
           <CardContent>
-            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3">
               <div className="grid grid-cols-2 gap-3 w-full sm:w-auto sm:grid-cols-3 items-end">
                 <div className="col-span-2 sm:col-span-1">
                   <Label className="text-neutral-300">Month</Label>
-                  <div className="flex gap-2 items-center mt-1">
+                  <div className="flex gap-2 items-center mt-1 min-w-0">
                     <Button variant="secondary" onClick={() => addMonth(-1)} title="Previous">
                       <Calendar className="h-4 w-4" />
                     </Button>
